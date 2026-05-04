@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DevOps App</title>
+</head>
+<body>
+
+<h2>Add User</h2>
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<button onclick="addUser()">Add</button>
+
+<h2>Users</h2>
+<ul id="users"></ul>
+
+<script>
+const API = "http://localhost:5000";
+
+function addUser() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+
+  fetch(API + "/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email })
+  }).then(() => loadUsers());
+}
+
+function loadUsers() {
+  fetch(API + "/users")
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("users");
+      list.innerHTML = "";
+      data.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = user.name + " - " + user.email;
+        list.appendChild(li);
+      });
+    });
+}
+
+loadUsers();
+</script>
+
+</body>
+</html>
